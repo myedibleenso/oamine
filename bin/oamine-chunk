@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+import argparse
+from oamine.candidate_generation.chunk import (
+  decoding,
+  adj_threshold_chunking
+)
+from oamine.candidate_generation import utils
+
+if __name__ == '__main__':
+  parser = argparse.ArgumentParser()
+
+  # Data args
+  parser.add_argument('--matrix', default=None, help="Path to preprocessed parsing result pkl file")
+
+  # Decoding args
+  parser.add_argument('--decoder', default='mart')
+  parser.add_argument('--subword', default='avg')
+  parser.add_argument("--output_dir", default=None, help="Path to output")
+  parser.add_argument("--output_name", default="coffee", help="The name prefix of output files. Will generate .chunk.jsonl and .asin.txt files.")
+
+  args = parser.parse_args()
+  utils.IO.ensure_dir(Path(args.output_dir))
+  asins, trees, results = decoding(args)
+  adj_threshold_chunking(args, asins, results)

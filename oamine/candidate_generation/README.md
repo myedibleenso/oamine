@@ -5,15 +5,6 @@ This repo contains code for product title segmentation. Given an product title, 
 There are two steps, **preprocessing** and **chunking**. The preprocessing step runs the product titles through a pre-trained BERT model to obtain word to word impact scores. The chunking step segments the titles into phrases based on the scores, and applies post processing to enhance phrase completeness.
 
 ## Running the code
-### Dependencies
-```
-numpy
-ray[tune]
-python>=3.8
-pytorch
-transformers==4.6.1
-tqdm
-```
 
 ### Data
 Input files should be jsonl files. For each product type (PT), the raw input should be stored in `[PT].jsonl`. Each line should have "asin" (unique ID) and "title" fields.

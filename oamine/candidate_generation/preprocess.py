@@ -1,15 +1,13 @@
 """Read a JsonL file, take the `title` field, and build the word-word impact
 matrix based on pre-trained BERT.
 Titles are truncated to MAX_SEQ_LENGTH."""
-
-import argparse
 import logging
 import os
 import pickle
 import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import List, Text
 
 import numpy as np
 import torch
@@ -141,8 +139,9 @@ def load_data(data_dir, data_split, tokenizer, disable_tqdm=False):
   return asins, tokenized_texts
 
 
-def get_impact_matrix(args, data_split, disable_tqdm=False):
-  tokenizer = BertTokenizer.from_pretrained(args.bert, do_lower_case=True)
+def get_impact_matrix(args, data_split, model_path: Text = "myedibleenso/oamine", disable_tqdm=False):
+  model_path = model_path if model_path else os.path.join(os.path.dirname(__file__), "data", "model")
+  tokenizer = utils.ModelUtils.load_pretrained_tokenizer(model_path=model_path, do_lower_case=True)
   asins, texts = load_data(args.data_dir, data_split, tokenizer, disable_tqdm=disable_tqdm)
 
   mask_id = tokenizer.convert_tokens_to_ids(["[MASK]"])[0]
@@ -201,7 +200,7 @@ def get_impact_matrix(args, data_split, disable_tqdm=False):
 
   # inference
   logger.info("Run inference")
-  model = BertModel.from_pretrained(args.bert, output_hidden_states=True)
+  model = utils.ModelUtils.load_pretrained_model(model_path=model_path, output_hidden_states=True)
   model.eval()
 
   # if this doesn"t work for your model, adapt it accordingly
@@ -279,31 +278,3 @@ def get_impact_matrix(args, data_split, disable_tqdm=False):
     with open(k_output, "wb") as fout:
       pickle.dump(out[k], fout)
       fout.close()
-
-
-if __name__ == "__main__":
-  parser = argparse.ArgumentParser()
-
-  # Model args
-  parser.add_argument("--batch_size", default=512, type=int)
-  parser.add_argument("--bert", default=None, help="Name or path to BERT checkpoint")
-
-  # Data args
-  parser.add_argument("--data_split", default=None)
-  parser.add_argument("--data_dir", default=None)
-  parser.add_argument("--output_dir", default=None)
-
-  # Matrix args
-  parser.add_argument("--metric", default="dist")
-
-  # Cuda
-  parser.add_argument("--cuda", action="store_true")
-
-  # Debug
-  parser.add_argument("--no_tqdm", action="store_true")
-
-  args = parser.parse_args()
-
-  utils.IO.ensure_dir(args.output_dir)
-
-  get_impact_matrix(args, args.data_split, disable_tqdm=args.no_tqdm)

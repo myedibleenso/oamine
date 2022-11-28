@@ -63,6 +63,7 @@ The `test` directory contains labels in clustering evaluation format, derived fr
 ## Citation
 
 Please cite our paper if you are using the dataset:
+
 ```bibtex
 @inproceedings{zhang2022oamine,
 author = {Zhang, Xinyang and Zhang, Chenwei and Li, Xian and Dong, Xin Luna and Shang, Jingbo and Faloutsos, Christos and Han, Jiawei},
@@ -80,7 +81,6 @@ keywords = {weak supervision., Open-world product attribute mining},
 location = {Virtual Event, Lyon, France},
 series = {WWW '22}
 }
-
 ```
 
 [1] Xinyang Zhang, Chenwei Zhang, Xian Li, Xin Luna Dong, Jingbo Shang, Christos Faloutsos, and Jiawei Han. 2022. OA-Mine: Open-World Attribute Mining for E-Commerce Products with Weak Supervision. In Proceedings of the ACM Web Conference 2022 (WWW '22). Association for Computing Machinery, New York, NY, USA, 3153–3161. https://doi.org/10.1145/3485447.3512035

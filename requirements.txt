@@ -1,0 +1,7 @@
+numpy>=1.2,<2
+ray[tune]
+torch
+torchvision
+torchaudio
+transformers==4.6.1
+tqdm

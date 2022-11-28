@@ -1,6 +1,8 @@
 from pathlib import Path
 import json
-from typing import List, Union, Any
+import os
+from transformers import BertModel, BertTokenizer, DataCollatorWithPadding
+from typing import Any, List, Optional, Text, Union
 import io
 
 
@@ -42,6 +44,39 @@ class JsonL(IO):
     with output_file.open("w") as f:
       for doc in docs:
         f.write(json.dumps(doc) + "\n")
+
+
+class ModelUtils:
+
+  @staticmethod
+  def _get_default_model_path(model_path: Optional[Text] = None) -> Text:
+    return model_path if model_path else os.path.join(os.path.dirname(__file__), "data", "model")
+
+  @staticmethod
+  def _is_local(model_path: Optional[Text] = None) -> bool:
+    True if not model_path else os.path.exists(model_path)
+
+  @staticmethod
+  def load_pretrained_model(model_path: Text = "myedibleenso/oamine", output_hidden_states: bool = True) -> BertModel:
+    """Loads a pre-trained BERT model"""
+    model_path = ModelUtils._get_default_model_path(model_path)
+    is_local = ModelUtils._is_local(model_path)
+    return BertModel.from_pretrained(
+      model_path, 
+      output_hidden_states=output_hidden_states, 
+      local_files_only=is_local
+    )
+  
+  @staticmethod
+  def load_pretrained_tokenizer(model_path: Text = "myedibleenso/oamine", do_lower_case=True) -> BertTokenizer:
+    """Loads a pre-trained tokenizer suitable for use with a BERT-based model"""
+    model_path = ModelUtils._get_default_model_path(model_path)
+    is_local = ModelUtils._is_local(model_path)
+    return BertTokenizer.from_pretrained(
+      model_path, 
+      do_lower_case=do_lower_case, 
+      local_files_only=is_local
+    )
 
 
 class TextIO(IO):

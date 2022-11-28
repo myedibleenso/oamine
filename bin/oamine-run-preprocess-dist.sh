@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+# FIXME: make this a Python script w/ argparse
+
 GPU=0,1
 BERT=/path/to/bert/checkpoint
 DATA_DIR=/path/to/data

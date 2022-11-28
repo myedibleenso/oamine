@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse
 import os
 from pathlib import Path
@@ -5,7 +7,7 @@ from pathlib import Path
 import ray
 from ray import tune
 
-from preprocess import get_impact_matrix
+from oamine.candidate_generation.preprocess import get_impact_matrix
 
 
 def run_chunk(config):
@@ -42,7 +44,7 @@ if __name__ == '__main__':
   pt_files = Path(args.data_dir).glob("*.csv")
   pt_files = [p.stem for p in pt_files]
   pt_files = [f"{p}.csv" for p in pt_files]
-  print("Launcing perturbed masking preprocessing on:")
+  print("Launching perturbed masking preprocessing on:")
   print(pt_files)
 
   ray.init()
